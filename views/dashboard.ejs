@@ -2,89 +2,96 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | FeedbackFlow</title>
     <style>
         :root {
-            --primary: #10b981; /* Green accent */
+            --primary: #10b981;
             --primary-hover: #059669;
             --bg: #f8fafc;
             --sidebar-bg: #ffffff;
             --card-bg: #ffffff;
             --text-main: #0f172a;
             --text-muted: #64748b;
+            /* Default Doodle Pattern (Tiny Pluses) */
+            --doodle: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
 
         body { 
             font-family: 'Inter', system-ui, sans-serif; 
             margin: 0; 
-            color: var(--text-main);
             display: flex; 
-            height: 100vh;
-            /* Tiny black doodles background pattern */
+            min-height: 100vh;
             background-color: var(--bg);
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3Ccircle cx='46' cy='16' r='2'/%3E%3Ccircle cx='16' cy='46' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-image: var(--doodle); /* Dynamic background */
         }
 
-        /* Sidebar Layout (Inspired by uploaded image) */
+        /* Sidebar */
         nav { 
-            width: 240px; 
-            background: var(--sidebar-bg); 
-            padding: 30px 20px;
-            border-right: 1px solid #e2e8f0;
-            display: flex;
-            flex-direction: column;
+            width: 260px; background: var(--sidebar-bg); padding: 30px 20px;
+            border-right: 1px solid #e2e8f0; display: flex; flex-direction: column;
+            flex-shrink: 0;
         }
+
         .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 40px; }
-        .nav-item { padding: 12px 15px; margin-bottom: 10px; border-radius: 8px; color: var(--text-muted); text-decoration: none; font-weight: 500; }
+        .nav-label { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin: 20px 0 10px 15px; letter-spacing: 1px; }
+        .nav-item { padding: 12px 15px; margin-bottom: 5px; border-radius: 8px; color: var(--text-muted); text-decoration: none; font-weight: 500; transition: 0.2s; cursor: pointer; }
         .nav-item.active { background: #ecfdf5; color: var(--primary); }
-        
-        main { flex-grow: 1; padding: 40px 50px; overflow-y: auto; }
-        
-        h1 { font-size: 2rem; margin-top: 0; }
+        .nav-item:hover:not(.active) { background: #f1f5f9; color: var(--text-main); }
 
-        /* Installation Card */
-        .install-box { 
-            background: var(--card-bg); padding: 25px; border-radius: 16px; margin-bottom: 30px;
-            border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        /* Theme Toggle Buttons */
+        .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px 15px; }
+        .theme-btn { 
+            height: 40px; border: 2px solid #e2e8f0; border-radius: 8px; 
+            background-size: cover; cursor: pointer; transition: 0.2s;
         }
-        .code-block { background: #0f172a; color: #34d399; padding: 20px; border-radius: 12px; font-family: monospace; font-size: 0.9rem; margin-top: 15px;}
+        .theme-btn.active { border-color: var(--primary); }
 
-        /* Feedback Grid (Card Style like the Image) */
+        /* Main Content */
+        main { flex-grow: 1; padding: 40px; max-width: 1200px; margin: 0 auto; width: 100%; box-sizing: border-box; }
+        .install-box { background: var(--card-bg); padding: 25px; border-radius: 16px; border: 1px solid #e2e8f0; margin-bottom: 30px; }
+        .code-block { background: #0f172a; color: #34d399; padding: 20px; border-radius: 12px; font-family: monospace; font-size: 0.85rem; overflow-x: auto; }
+
         .feedback-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .feedback-card {
-            background: var(--card-bg); padding: 25px; border-radius: 16px;
-            border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-        .feedback-card .badge { 
-            display: inline-block; background: #ecfdf5; color: var(--primary); 
-            padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-bottom: 15px;
-        }
-        .feedback-card h4 { margin: 0 0 10px 0; color: var(--text-main); font-size: 1.1rem; }
-        .feedback-card p { margin: 0 0 15px 0; color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; }
-        .feedback-card .date { font-size: 0.8rem; color: #94a3b8; }
+        .feedback-card { background: var(--card-bg); padding: 25px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
 
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            nav { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; padding: 15px; }
+            .logo { margin-bottom: 0; }
+            .nav-label, .theme-grid, .nav-item:not(.active) { display: none; }
+            main { padding: 20px; }
+        }
     </style>
 </head>
 <body>
 
     <nav>
         <div class="logo">FeedbackFlow.</div>
-        <a href="#" class="nav-item active">Dashboard</a>
+        
+        <div class="nav-label">Main Menu</div>
+        <a href="#" class="nav-item active">Feedback</a>
         <a href="#" class="nav-item">Analytics</a>
-        <a href="#" class="nav-item">Settings</a>
-        <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-            <p style="margin:0; font-size:0.9rem; font-weight:bold;"><%= user.email %></p>
-            <p style="margin:5px 0 0; font-size:0.8rem; color:var(--text-muted);">Plan: <%= user.plan %></p>
+
+        <div class="nav-label">Doodle Style</div>
+        <div class="theme-grid">
+            <button class="theme-btn active" onclick="setDoodle('pluses', this)" style="background-image: url('data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M10 8v4h-1v-4h-4v-1h4v-4h1v4h4v1h-4z\' fill=\'%23000\' fill-opacity=\'0.2\'/%3E%3C/svg%3E')"></button>
+            <button class="theme-btn" onclick="setDoodle('circles', this)" style="background-image: url('data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Ccircle cx=\'10\' cy=\'10\' r=\'2\' fill=\'%23000\' fill-opacity=\'0.2\'/%3E%3C/svg%3E')"></button>
+            <button class="theme-btn" onclick="setDoodle('circuit', this)" style="background-image: url('data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 0h20v20H0V0zm10 17v-3h3v3h-3zm-5-5v-3h3v3H5z\' fill=\'%23000\' fill-opacity=\'0.1\'/%3E%3C/svg%3E')"></button>
+            <button class="theme-btn" onclick="setDoodle('abstract', this)" style="background-image: url('data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M2 2l16 16M18 2L2 18\' stroke=\'%23000\' stroke-opacity=\'0.1\'/%3E%3C/svg%3E')"></button>
+        </div>
+
+        <div style="margin-top: auto; padding: 15px; border-top: 1px solid #e2e8f0;">
+            <strong><%= user.email %></strong><br>
+            <small style="color: var(--primary);">Plan: <%= user.plan %></small>
         </div>
     </nav>
 
     <main>
-        <h1>Welcome, User!</h1>
-        <p style="color: var(--text-muted); margin-bottom: 40px;">Here is the latest feedback from your customers.</p>
-        
+        <h1>Customer Insights</h1>
         <div class="install-box">
-            <h3 style="margin-top:0;">Install your widget</h3>
-            <p style="color: var(--text-muted);">Copy and paste this right before your closing <code>&lt;/body&gt;</code> tag:</p>
+            <h3>Installation Code</h3>
             <div class="code-block">
 &lt;script&gt;
   window.FeedbackFlowConfig = { tenantId: '<%= user.id %>', color: '#10b981' };
@@ -93,23 +100,88 @@
             </div>
         </div>
 
-        <h3 style="margin-bottom: 20px;">Recent Feedback (<%= feedbacks.length %>)</h3>
-        
         <div class="feedback-grid">
-            <% if (feedbacks.length > 0) { %>
-                <% feedbacks.forEach(function(fb) { %>
-                    <div class="feedback-card">
-                        <div class="badge">New Insight</div>
-                        <h4><%= fb.userEmail %></h4>
-                        <p>“<%= fb.message %>”</p>
-                        <div class="date"><%= fb.date %></div>
-                    </div>
-                <% }); %>
-            <% } else { %>
-                <p>No feedback yet. Install the widget to get started!</p>
-            <% } %>
+            <% feedbacks.forEach(fb => { %>
+                <div class="feedback-card">
+                    <div style="font-size: 0.8rem; color: var(--primary); font-weight: 700; margin-bottom: 10px;">VERIFIED FEEDBACK</div>
+                    <h4><%= fb.userEmail %></h4>
+                    <p>"<%= fb.message %>"</p>
+                    <div style="font-size: 0.8rem; color: #94a3b8;"><%= fb.date %></div>
+                </div>
+            <% }) %>
         </div>
+        <div class="nav-label">Integrations</div>
+<a href="#" class="nav-item" id="nav-slack" onclick="showSection('slack')">Slack Alerts</a>
+
+<div id="slack-section" style="display:none;" class="install-box">
+    <h3 style="margin-top:0; color: #4a154b;">Connect to Slack</h3>
+    <p style="color: var(--text-muted);">Paste your <strong>Incoming Webhook URL</strong> to receive instant alerts when customers leave feedback.</p>
+    <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <input type="text" id="webhook-input" placeholder="https://hooks.slack.com/services/..." 
+               value="<%= user.slackWebhookUrl %>"
+               style="flex-grow: 1; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;">
+        <button onclick="saveSlack()" class="cta-btn" style="background: #4a154b; border:none; padding: 0 20px; border-radius: 8px; color: white; cursor: pointer; font-weight: bold;">Save</button>
+    </div>
+</div>
     </main>
 
+    <script>
+        const patterns = {
+            pluses: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            circles: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='2' fill='%23000' fill-opacity='0.05'/%3E%3C/svg%3E")`,
+            circuit: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%23000' stroke-width='1' stroke-opacity='0.03'%3E%3Cpath d='M40 40h40M0 40h40M40 0v40M40 40v40'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            abstract: `url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 50L50 0m-50 0L50 50' stroke='%23000' stroke-opacity='0.03' fill='none'/%3E%3C/svg%3E")`
+        };
+
+        function setDoodle(type, btn) {
+            // Update CSS Variable
+            document.documentElement.style.setProperty('--doodle', patterns[type]);
+            
+            // Update UI buttons
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Optional: Save to local storage so it persists on refresh
+            localStorage.setItem('user-doodle', type);
+        }
+
+        // Load saved preference on start
+        window.onload = () => {
+            const saved = localStorage.getItem('user-doodle');
+            if (saved) {
+                const targetBtn = document.querySelector(`[onclick*="${saved}"]`);
+                if (targetBtn) setDoodle(saved, targetBtn);
+            }
+        }
+        // Toggle between sections
+    function showSection(section) {
+        const slackDiv = document.getElementById('slack-section');
+        if(section === 'slack') {
+            slackDiv.style.display = slackDiv.style.display === 'none' ? 'block' : 'none';
+        }
+    }
+
+    // Save Webhook to Server
+    async function saveSlack() {
+        const url = document.getElementById('webhook-input').value;
+        const btn = event.target;
+        btn.innerText = "Saving...";
+
+        const response = await fetch('/api/settings/slack', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ webhookUrl: url })
+        });
+
+        if(response.ok) {
+            btn.innerText = "Saved!";
+            btn.style.background = "#10b981";
+            setTimeout(() => {
+                btn.innerText = "Save";
+                btn.style.background = "#4a154b";
+            }, 2000);
+        }
+    }
+    </script>
 </body>
 </html>
