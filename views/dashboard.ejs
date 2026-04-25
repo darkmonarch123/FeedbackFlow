@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard | FeedbackFlow</title>
+    <style>
+        :root {
+            --primary: #10b981; /* Green accent */
+            --primary-hover: #059669;
+            --bg: #f8fafc;
+            --sidebar-bg: #ffffff;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        body { 
+            font-family: 'Inter', system-ui, sans-serif; 
+            margin: 0; 
+            color: var(--text-main);
+            display: flex; 
+            height: 100vh;
+            /* Tiny black doodles background pattern */
+            background-color: var(--bg);
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3Ccircle cx='46' cy='16' r='2'/%3E%3Ccircle cx='16' cy='46' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        /* Sidebar Layout (Inspired by uploaded image) */
+        nav { 
+            width: 240px; 
+            background: var(--sidebar-bg); 
+            padding: 30px 20px;
+            border-right: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+        }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 40px; }
+        .nav-item { padding: 12px 15px; margin-bottom: 10px; border-radius: 8px; color: var(--text-muted); text-decoration: none; font-weight: 500; }
+        .nav-item.active { background: #ecfdf5; color: var(--primary); }
+        
+        main { flex-grow: 1; padding: 40px 50px; overflow-y: auto; }
+        
+        h1 { font-size: 2rem; margin-top: 0; }
+
+        /* Installation Card */
+        .install-box { 
+            background: var(--card-bg); padding: 25px; border-radius: 16px; margin-bottom: 30px;
+            border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .code-block { background: #0f172a; color: #34d399; padding: 20px; border-radius: 12px; font-family: monospace; font-size: 0.9rem; margin-top: 15px;}
+
+        /* Feedback Grid (Card Style like the Image) */
+        .feedback-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .feedback-card {
+            background: var(--card-bg); padding: 25px; border-radius: 16px;
+            border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .feedback-card .badge { 
+            display: inline-block; background: #ecfdf5; color: var(--primary); 
+            padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-bottom: 15px;
+        }
+        .feedback-card h4 { margin: 0 0 10px 0; color: var(--text-main); font-size: 1.1rem; }
+        .feedback-card p { margin: 0 0 15px 0; color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; }
+        .feedback-card .date { font-size: 0.8rem; color: #94a3b8; }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">FeedbackFlow.</div>
+        <a href="#" class="nav-item active">Dashboard</a>
+        <a href="#" class="nav-item">Analytics</a>
+        <a href="#" class="nav-item">Settings</a>
+        <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+            <p style="margin:0; font-size:0.9rem; font-weight:bold;"><%= user.email %></p>
+            <p style="margin:5px 0 0; font-size:0.8rem; color:var(--text-muted);">Plan: <%= user.plan %></p>
+        </div>
+    </nav>
+
+    <main>
+        <h1>Welcome, User!</h1>
+        <p style="color: var(--text-muted); margin-bottom: 40px;">Here is the latest feedback from your customers.</p>
+        
+        <div class="install-box">
+            <h3 style="margin-top:0;">Install your widget</h3>
+            <p style="color: var(--text-muted);">Copy and paste this right before your closing <code>&lt;/body&gt;</code> tag:</p>
+            <div class="code-block">
+&lt;script&gt;
+  window.FeedbackFlowConfig = { tenantId: '<%= user.id %>', color: '#10b981' };
+&lt;/script&gt;
+&lt;script src="http://localhost:3000/widget.js"&gt;&lt;/script&gt;
+            </div>
+        </div>
+
+        <h3 style="margin-bottom: 20px;">Recent Feedback (<%= feedbacks.length %>)</h3>
+        
+        <div class="feedback-grid">
+            <% if (feedbacks.length > 0) { %>
+                <% feedbacks.forEach(function(fb) { %>
+                    <div class="feedback-card">
+                        <div class="badge">New Insight</div>
+                        <h4><%= fb.userEmail %></h4>
+                        <p>“<%= fb.message %>”</p>
+                        <div class="date"><%= fb.date %></div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>No feedback yet. Install the widget to get started!</p>
+            <% } %>
+        </div>
+    </main>
+
+</body>
+</html>
